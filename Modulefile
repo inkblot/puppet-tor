@@ -1,0 +1,8 @@
+name    'inkblot/tor'
+version '1.0.0'
+source  'git://githubcom/inkblot/puppet-tor'
+author  'inkblot'
+license 'Apache 2.0'
+summary 'Tor onion router'
+description 'A Puppet module to deploy and manage Tor nodes'
+project_page 'https://github.com/inkblot/puppet-tor'
