@@ -12,21 +12,21 @@
 ## Tor will look for this file in various places based on your platform:
 ## https://wiki.torproject.org/noreply/TheOnionRouter/TorFAQ#torrc
 
+<%- if @socks -%>
+SocksPort <%= @socksport  %>
+<%-   Array(@sockslistenaddresses).each do |address| -%>
+SocksListenAddress <%= address %>
+<%-   end -%>
+<%-   unless @sockspolicies.empty? -%>
 
-## Replace this with "SocksPort 0" if you plan to run Tor only as a
-## relay, and not make any local application connections yourself.
-SocksPort <%= @entry ? @socksport : '0' %> # what port to open for local application connections
-SocksListenAddress <%= @entry ? @sockslistenaddress : '127.0.0.1' %> # accept connections only from localhost
-#SocksListenAddress 192.168.0.1:9100 # listen on this IP:port also
-
-## Entry policies to allow/deny SOCKS requests based on IP address.
-## First entry that matches wins. If no SocksPolicy is set, we accept
-## all (and only) requests from SocksListenAddress.
-<%- if @entry
-      @sockspolicies.each do |policy| -%>
+<%-     @sockspolicies.each do |policy| -%>
 SocksPolicy <%= policy['policy'] %> <%= policy['target'] %>
-<%-   end
-    end -%>
+<%-     end -%>
+<%-   end -%>
+<%- else -%>
+SocksPort 0
+SocksListenAddress 127.0.0.1
+<%- end -%>
 
 ## Logs go to stdout at level "notice" unless redirected by something
 ## else, like one of the below lines. You can have as many Log lines as
@@ -60,41 +60,43 @@ SocksPolicy <%= policy['policy'] %> <%= policy['target'] %>
 ## authentication methods, to prevent attackers from accessing it.
 #HashedControlPassword 16:872860B76453A77D60CA2BB8C1A7042072093276A3D701AD684053EC4C
 #CookieAuthentication 1
+<%- unless @hidden_services.empty? -%>
 
 ############### This section is just for location-hidden services ###
 
 ## Once you have configured a hidden service, you can look at the
 ## contents of the file ".../hidden_service/hostname" for the address
 ## to tell people.
-##
-## HiddenServicePort x y:z says to redirect requests on port x to the
-## address y:z.
+<%-   @hidden_services.each do |service| -%>
 
-#HiddenServiceDir /var/lib/tor/hidden_service/
-#HiddenServicePort 80 127.0.0.1:80
-
-#HiddenServiceDir /var/lib/tor/other_hidden_service/
-#HiddenServicePort 80 127.0.0.1:80
-#HiddenServicePort 22 127.0.0.1:22
+HiddenServiceDir /var/lib/tor/<%= service['name'] %>
+<%-     service['ports'].each do |port| -%>
+HiddenServicePort <%= port['hsport'] %> <%= port['origin'] -%>
+<%-     end -%>
+<%-   end -%>
+<%- end -%>
+<%- if @relay -%>
 
 ################ This section is just for relays #####################
 #
 ## See https://www.torproject.org/docs/tor-doc-relay for details.
 
 ## Required: what port to advertise for incoming Tor connections.
-#ORPort 9001
+ORPort <%= @orport %>
 ## If you want to listen on a port other than the one advertised
 ## in ORPort (e.g. to advertise 443 but bind to 9090), uncomment the
 ## line below too. You'll need to do ipchains or other port forwarding
 ## yourself to make this work.
-#ORListenAddress 0.0.0.0:9090
+ORListenAddress <%= @orlistenaddress %>
 
 ## A handle for your relay, so people don't have to refer to it by key.
-#Nickname ididnteditheconfig
+Nickname <%= @nickname %>
+<%-   if @address -%>
 
 ## The IP address or full DNS name for your relay. Leave commented out
 ## and Tor will guess.
-#Address noname.example.com
+Address <%= @address %>
+<%-   end -%>
 
 ## Define these to limit how much relayed traffic you will allow. Your
 ## own traffic is still unthrottled. Note that RelayBandwidthRate must
@@ -142,6 +144,7 @@ SocksPolicy <%= policy['policy'] %> <%= policy['target'] %>
 ## using more than one of your relays in a single circuit. See
 ## https://wiki.torproject.org/noreply/TheOnionRouter/TorFAQ#MultipleServers
 #MyFamily $keyid,$keyid,...
+<%-   if @exit -%>
 
 ## A comma-separated list of exit policies. They're considered first
 ## to last, and the first match wins. If you want to _replace_
@@ -168,6 +171,18 @@ SocksPolicy <%= policy['policy'] %> <%= policy['target'] %>
 ## won't be able to block all the bridges. Also, websites won't treat you
 ## differently because they won't know you're running Tor. If you can
 ## be a real relay, please do; but if not, be a bridge!
-#BridgeRelay 1
+BridgeRelay <%= @bridge ? '1' : '0' %>
 #ExitPolicy reject *:*
+<%-   end -%>
+<%-   if @directory -%>
 
+DirPort <%= @dirport %>
+DirListenAddress <%= @dirlistenaddress %>
+<%-   end -%>
+<%- end -%>
+<%- unless @dirservers.empty? -%>
+
+<%-   @dirservers.each do |ds| -%>
+DirServer <%= ds['nickname'] %> <%= ds['flags'].join(' ') %> <%= ds['address'] %> <%= ds['fingerprint'] %>
+<%-   end -%>
+<%- end -%>

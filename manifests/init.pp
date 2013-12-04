@@ -1,14 +1,25 @@
 class tor (
-	$entry              = true,
-	$socksport          = '9050',
-	$sockslistenaddress = '127.0.0.1',
-	$sockspolicies      = [ {
+	$socks                = true,
+	$socksport            = '9050',
+	$sockslistenaddresses = '127.0.0.1',
+	$sockspolicies        = [ {
 			policy => 'accept',
 			target => '192.168.0.0/16',
 		}, {
 			policy => 'reject',
 			target => '*',
 		} ],
+	$dirservers           = [],
+	$relay                = true,
+	$orport               = '9001',
+	$orlistenaddress      = '0.0.0.0:9001',
+	$nickname             = 'ididnteditheconfig',
+	$address              = false,
+	$bridge               = false,
+	$directory            = false,
+	$dirport              = '9000',
+	$dirlistenaddress     = '0.0.0.0:9000',
+	$hidden_services      = [],
 ) {
 
 	package { 'tor':
