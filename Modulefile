@@ -1,5 +1,5 @@
 name    'inkblot/tor'
-version '1.0.0'
+version '1.1.0'
 source  'git://githubcom/inkblot/puppet-tor'
 author  'inkblot'
 license 'Apache 2.0'

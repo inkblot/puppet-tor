@@ -97,6 +97,17 @@ Nickname <%= @nickname %>
 ## and Tor will guess.
 Address <%= @address %>
 <%-   end -%>
+<%-   if @bridge -%>
+
+## Bridge relays (or "bridges") are Tor relays that aren't listed in the
+## main directory. Since there is no complete public list of them, even if an
+## ISP is filtering connections to all the known Tor relays, they probably
+## won't be able to block all the bridges. Also, websites won't treat you
+## differently because they won't know you're running Tor. If you can
+## be a real relay, please do; but if not, be a bridge!
+BridgeRelay 1
+PublishServerDescriptor <%= @publishserverdescriptor ? '1' : '0' %>
+<%-   end -%>
 
 ## Define these to limit how much relayed traffic you will allow. Your
 ## own traffic is still unthrottled. Note that RelayBandwidthRate must
@@ -164,14 +175,6 @@ Address <%= @address %>
 #ExitPolicy accept *:6660-6667,reject *:* # allow irc ports but no more
 #ExitPolicy accept *:119 # accept nntp as well as default exit policy
 #ExitPolicy reject *:* # no exits allowed
-#
-## Bridge relays (or "bridges") are Tor relays that aren't listed in the
-## main directory. Since there is no complete public list of them, even if an
-## ISP is filtering connections to all the known Tor relays, they probably
-## won't be able to block all the bridges. Also, websites won't treat you
-## differently because they won't know you're running Tor. If you can
-## be a real relay, please do; but if not, be a bridge!
-BridgeRelay <%= @bridge ? '1' : '0' %>
 #ExitPolicy reject *:*
 <%-   end -%>
 <%-   if @directory -%>
@@ -184,5 +187,17 @@ DirListenAddress <%= @dirlistenaddress %>
 
 <%-   @dirservers.each do |ds| -%>
 DirServer <%= ds['nickname'] %> <%= ds['flags'].join(' ') %> <%= ds['address'] %> <%= ds['fingerprint'] %>
+<%-   end -%>
+<%- else -%>
+<%-   if @usebridges -%>
+
+UseBridges 1
+UpdateBridgesFromAuthority <%= @updatebridgesfromauthority ? '1' : '0' %>
+<%-     unless @bridges.empty? -%>
+
+<%-       @bridges.each do |bridge| -%>
+Bridge <%= bridge['transport'] %> <%= "#{bridge['ip']}:#{bridge['orport']}" %> <%= bridge['fingerprint'] %>
+<%-       end -%>
+<%-     end -%>
 <%-   end -%>
 <%- end -%>
