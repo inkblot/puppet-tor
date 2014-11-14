@@ -71,7 +71,7 @@ SocksListenAddress 127.0.0.1
 
 HiddenServiceDir /var/lib/tor/<%= service['name'] %>
 <%-     service['ports'].each do |port| -%>
-HiddenServicePort <%= port['hsport'] %> <%= port['origin'] -%>
+HiddenServicePort <%= port['hsport'] %> <%= port['origin'] %>
 <%-     end -%>
 <%-   end -%>
 <%- end -%>
