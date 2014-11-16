@@ -28,14 +28,14 @@ SocksPort 0
 SocksListenAddress 127.0.0.1
 <%- end -%>
 
-<%- if @dnsPort -%>
-DNSPort <%= @dnsPort %>
-DNSListenAddress <%= @dnsListenAddress %>
+<%- if @dnsport -%>
+DNSPort <%= @dnsport %>
+DNSListenAddress <%= @dnslistenaddress %>
 <%- end -%>
 
-<%- if @transPort -%>
-TransPort <%= @transPort %>
-TransListenAddress <%= @transListenAddress %>
+<%- if @transport -%>
+TransPort <%= @transport %>
+TransListenAddress <%= @translistenaddress %>
 <%- end -%>
 
 ## Logs go to stdout at level "notice" unless redirected by something

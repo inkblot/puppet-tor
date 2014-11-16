@@ -24,10 +24,10 @@ class tor (
 	$dirport                    = '9000',
 	$dirlistenaddress           = '0.0.0.0:9000',
 	$hidden_services            = [],
-        $transPort                  = false,
-        $transListenAddress         = '127.0.0.1',
-        $dnsPort                    = false,
-        $dnsListenAddress           = '127.0.0.1',
+        $transport                  = false,
+        $translistenaddress         = '127.0.0.1',
+        $dnsport                    = false,
+        $dnslistenaddress           = '127.0.0.1',
 ) {
 
 	package { 'tor':
