@@ -28,6 +28,16 @@ SocksPort 0
 SocksListenAddress 127.0.0.1
 <%- end -%>
 
+<%- if @dnsPort -%>
+DNSPort <%= @dnsPort %>
+DNSListenAddress <%= @dnsListenAddress %>
+<%- end -%>
+
+<%- if @transPort -%>
+TransPort <%= @transPort %>
+TransListenAddress <%= @transListenAddress %>
+<%- end -%>
+
 ## Logs go to stdout at level "notice" unless redirected by something
 ## else, like one of the below lines. You can have as many Log lines as
 ## you want.
