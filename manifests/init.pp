@@ -28,7 +28,6 @@ class tor (
     $directory                  = false,
     $dirport                    = '9000',
     $dirlistenaddress           = '0.0.0.0:9000',
-    $hidden_services            = [],
     $transport                  = false,
     $translistenaddress         = '127.0.0.1',
     $dnsport                    = false,
@@ -39,13 +38,17 @@ class tor (
         ensure => installed,
     }
 
-    file { '/etc/tor/torrc':
-        ensure  => present,
+    concat { '/etc/tor/torrc':
         owner   => 'root',
         group   => 'root',
-        content => template('tor/torrc.erb'),
         require => Package['tor'],
         notify  => Service['tor'],
+    }
+
+    concat::fragment { 'torrc-main':
+        target  => '/etc/tor/torrc',
+        content => template('tor/torrc.erb'),
+        order   => '00',
     }
 
     service { 'tor':

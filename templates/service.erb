@@ -1,0 +1,8 @@
+
+############### This section is location-hidden service <%= @name %>  ###
+
+## Once you have configured a hidden service, you can find the hidden
+## service hostname in /var/lib/tor/<%= @name %>/hostname
+
+HiddenServiceDir /var/lib/tor/<%= @name %>
+HiddenServicePort <%= @virtual_port %> <%= @real_address %>:<%= @real_port === 'same' ? @virtual_port : @real_port %>
