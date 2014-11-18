@@ -8,3 +8,4 @@ description 'A Puppet module to deploy and manage Tor nodes'
 project_page 'https://github.com/inkblot/puppet-tor'
 
 dependency 'puppetlabs/concat', '>= 1.0.0'
+dependency 'ripienaar/module_data', '>= 0.0.3'
