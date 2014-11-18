@@ -1,3 +1,5 @@
 ---
 tor::user: 'debian-tor'
 tor::group: 'debian-tor'
+tor::tor_service: 'tor'
+tor::tor_package: 'tor'

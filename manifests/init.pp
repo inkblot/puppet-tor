@@ -32,10 +32,27 @@ class tor (
     $translistenaddress         = '127.0.0.1',
     $dnsport                    = false,
     $dnslistenaddress           = '127.0.0.1',
+    $identity_key_source        = false,
+    $user,
+    $group,
+    $tor_service,
+    $tor_package,
 ) {
 
     package { 'tor':
+        name   => $tor_package,
         ensure => installed,
+    }
+
+    if $identity_key_source {
+        # A 1024-bit PEM format RSA private key
+        file { '/var/lib/tor/keys/secret_id_key':
+            ensure => present,
+            owner  => $user,
+            group  => $group,
+            mode   => '0600',
+            source => $identity_key_source,
+        }
     }
 
     concat { '/etc/tor/torrc':
@@ -52,6 +69,7 @@ class tor (
     }
 
     service { 'tor':
+        name   => $tor_service,
         ensure => running,
     }
 
