@@ -37,11 +37,18 @@ class tor (
     $group,
     $tor_service,
     $tor_package,
+    $repo_class,
 ) {
+
+    if $repo_class {
+        class { $repo_class:
+            before => Package['tor'],
+        }
+    }
 
     package { 'tor':
         name   => $tor_package,
-        ensure => installed,
+        ensure => latest,
     }
 
     if $identity_key_source {

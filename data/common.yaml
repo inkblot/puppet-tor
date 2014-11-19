@@ -1,3 +1,4 @@
 ---
 tor::user: 'root'
 tor::group: 'root'
+tor::repo_class: false
