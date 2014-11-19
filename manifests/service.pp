@@ -20,8 +20,9 @@ define tor::service (
     }
 
     file { "/var/lib/tor/${name}":
-        ensure => directory,
-        mode   => '2700',
+        ensure  => directory,
+        mode    => '2700',
+        require => Package['tor'],
     }
 
     if $private_key_source {

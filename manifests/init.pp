@@ -59,6 +59,8 @@ class tor (
             group  => $group,
             mode   => '0600',
             source => $identity_key_source,
+            require => Package['tor'],
+            notify  => Service['tor'],
         }
     }
 
