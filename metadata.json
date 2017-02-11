@@ -1,6 +1,6 @@
 {
   "name": "inkblot/tor",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "inkblot",
   "license": "Apache-2.0",
   "summary": "Tor onion router",
